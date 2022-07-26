@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: annualgross
+  name: annualgross
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: annualgross
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: annualgross
+    spec:
+      containers:
+      - image: rabbitmq-microservices-kubernates_annual-gross
+        name: rabbitmq-microservices-kubernates-annual-gross-7pbtg
+        imagePullPolicy: IfNotPresent
+        resources: {}
+        env:
+          - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+            value: http://discovery-server:8761/eureka
+          - name: SPRING_DATASOURCE_URL
+            value: jdbc:postgresql://postgres:5432/
+          - name: SPRING_DATASOURCE_USERNAME
+            value: postgres
+          - name: SPRING_DATASOURCE_PASSWORD
+            value: password
+
+status: {}
