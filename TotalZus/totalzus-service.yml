@@ -3,17 +3,17 @@ kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    app: annualgross
-  name: annualgross
+    app: totalzus
+  name: totalzus
 spec:
   ports:
-  - name: 8091-8091
-    port: 8091
+  - name: 8098-8098
+    port: 8098
     protocol: TCP
-    targetPort: 8091
-    nodePort: 30543
+    targetPort: 8098
+    nodePort: 30542
   selector:
-    app: annualgross
+    app: totalzus
   type: NodePort
 status:
   loadBalancer: {}

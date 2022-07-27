@@ -3,23 +3,23 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: annualgross
-  name: annualgross
+    app: disabilityzus
+  name: disabilityzus
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: annualgross
+      app: disabilityzus
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: annualgross
+        app: disabilityzus
     spec:
       containers:
-      - image: rabbitmq-microservices-kubernates_annual-gross
-        name: rabbitmq-microservices-kubernates-annual-gross-7pbtg
+      - image: rabbitmq-microservices-kubernates_disability-zus
+        name: rabbitmq-microservices-kubernates-disability-zus-m4c6f
         imagePullPolicy: IfNotPresent
         resources: {}
         env:

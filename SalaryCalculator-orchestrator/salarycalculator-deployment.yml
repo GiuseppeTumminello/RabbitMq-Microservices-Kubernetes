@@ -3,23 +3,23 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: annualgross
-  name: annualgross
+    app: salarycalculator
+  name: salarycalculator
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: annualgross
+      app: salarycalculator
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: annualgross
+        app: salarycalculator
     spec:
       containers:
-      - image: rabbitmq-microservices-kubernates_annual-gross
-        name: rabbitmq-microservices-kubernates-annual-gross-7pbtg
+      - image: rabbitmq-microservices-kubernates_salary-calculator
+        name: rabbitmq-microservices-kubernates-salary-calculator-j7zct
         imagePullPolicy: IfNotPresent
         resources: {}
         env:

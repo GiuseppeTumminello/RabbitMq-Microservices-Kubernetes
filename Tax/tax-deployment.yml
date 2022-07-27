@@ -3,23 +3,23 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: annualgross
-  name: annualgross
+    app: tax
+  name: tax
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: annualgross
+      app: tax
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: annualgross
+        app: tax
     spec:
       containers:
-      - image: rabbitmq-microservices-kubernates_annual-gross
-        name: rabbitmq-microservices-kubernates-annual-gross-7pbtg
+      - image: rabbitmq-microservices-kubernates_tax
+        name: rabbitmq-microservices-kubernates-tax-4jwrs
         imagePullPolicy: IfNotPresent
         resources: {}
         env:

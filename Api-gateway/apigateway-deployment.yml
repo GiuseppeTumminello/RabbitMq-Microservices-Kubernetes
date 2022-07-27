@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: apigateway
+  name: apigateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigateway
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: apigateway
+    spec:
+      containers:
+      - image: rabbitmq-microservices-kubernates_api-gateway
+        name: rabbitmq-microservices-kubernates-api-gateway-6djk9
+        imagePullPolicy: IfNotPresent
+        resources: {}
+        env:
+          - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+            value: http://discovery-server:8761/eureka
+status: {}

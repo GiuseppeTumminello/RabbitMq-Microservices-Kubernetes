@@ -3,17 +3,17 @@ kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    app: annualgross
-  name: annualgross
+    app: pensionzus
+  name: pensionzus
 spec:
   ports:
-  - name: 8091-8091
-    port: 8091
+  - name: 8081-8081
+    port: 8081
     protocol: TCP
-    targetPort: 8091
-    nodePort: 30543
+    targetPort: 8081
+    nodePort: 30539
   selector:
-    app: annualgross
+    app: pensionzus
   type: NodePort
 status:
   loadBalancer: {}

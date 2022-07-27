@@ -3,17 +3,17 @@ kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    app: annualgross
-  name: annualgross
+    app: apigateway
+  name: apigateway
 spec:
   ports:
-  - name: 8091-8091
-    port: 8091
+  - name: 8080-8080
+    port: 8080
     protocol: TCP
-    targetPort: 8091
+    targetPort: 8080
     nodePort: 30543
   selector:
-    app: annualgross
+    app: apigateway
   type: NodePort
 status:
   loadBalancer: {}
