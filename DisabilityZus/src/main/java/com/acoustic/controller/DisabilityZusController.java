@@ -2,11 +2,10 @@ package com.acoustic.controller;
 
 
 import com.acoustic.entity.DisabilityZus;
-import com.acoustic.repository.DisabilityZusRepository;
+import com.acoustic.repository.DisabilityZusDao;
 import com.acoustic.service.SalaryCalculatorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -27,17 +26,11 @@ import java.util.UUID;
 public class DisabilityZusController {
 
     public static final int MINIMUM_GROSS = 2000;
-    private static final String DISABILITY_ZUS_RECEIVER_ID = "disabilityZusReceiverId";
-    private final DisabilityZusRepository disabilityZusRepository;
+    private final DisabilityZusDao disabilityZusDao;
     private final SalaryCalculatorService salaryCalculatorService;
 
 
-    @RabbitListener(id = DISABILITY_ZUS_RECEIVER_ID,queues = "${rabbitmq.queueDisabilityZus}")
-    public void receiveMessage(DisabilityZus disabilityZus) {
-        log.warn(disabilityZus.getUuid().toString());
-        sendDisabilityZusDataToSalaryCalculatorOrchestrator(disabilityZus.getAmount(), disabilityZus.getUuid());
 
-    }
 
 
     @PostMapping("/calculation/{grossMonthlySalary}")
@@ -54,7 +47,7 @@ public class DisabilityZusController {
     }
 
     private DisabilityZus saveDisabilityZus(BigDecimal disabilityZus, UUID uuid) {
-        return this.disabilityZusRepository.saveAndFlush(DisabilityZus.builder().description(this.salaryCalculatorService.getDescription()).amount(disabilityZus).uuid(uuid).build());
+        return this.disabilityZusDao.save(DisabilityZus.builder().description(this.salaryCalculatorService.getDescription()).amount(disabilityZus).uuid(uuid).build());
     }
 
     private BigDecimal calculateDisabilityZus(BigDecimal grossMonthlySalary) {

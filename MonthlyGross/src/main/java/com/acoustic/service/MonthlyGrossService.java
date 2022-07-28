@@ -1,9 +1,9 @@
 package com.acoustic.service;
 
+import com.acoustic.awssettings.AwsSettings;
 import com.acoustic.entity.MonthlyGross;
-import com.acoustic.rabbitmqsettings.RabbitMqSettings;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -13,8 +13,9 @@ import java.math.RoundingMode;
 @RequiredArgsConstructor
 public class MonthlyGrossService implements SalaryCalculatorService {
 
-    private final RabbitTemplate rabbitTemplate;
-    private final RabbitMqSettings rabbitMqSettings;
+   private final QueueMessagingTemplate queueMessagingTemplate;
+
+   private final AwsSettings awsSettings;
 
 
     @Override
@@ -24,7 +25,7 @@ public class MonthlyGrossService implements SalaryCalculatorService {
 
     @Override
     public void sendMonthlyGross(MonthlyGross monthlyGross) {
-        this.rabbitTemplate.convertAndSend(this.rabbitMqSettings.getExchangeSalaryCalculator(), this.rabbitMqSettings.getRoutingKeySalaryCalculator(), monthlyGross);
+        this.queueMessagingTemplate.convertAndSend(this.awsSettings.getSqsEndpoint(), monthlyGross);
     }
 
     @Override

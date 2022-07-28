@@ -6,7 +6,6 @@ import com.acoustic.repository.AnnualNetDao;
 import com.acoustic.service.SalaryCalculatorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -28,16 +27,6 @@ public class AnnualNetController{
     public static final int MINIMUM_GROSS = 2000;
     private final AnnualNetDao annualNetRepository;
     private final SalaryCalculatorService salaryCalculatorService;
-    private static final String ANNUAL_NET_RECEIVER_ID = "AnnualNetReceiverId";
-
-
-    @RabbitListener(id = ANNUAL_NET_RECEIVER_ID,queues = "${rabbitmq.queueAnnualNet}")
-    public void receiveMessage(AnnualNet annualNet) {
-        log.warn(annualNet.getUuid().toString());
-        sendAnnualNetEndpointDataToSalaryCalculatorOrchestrator(annualNet.getAmount(),annualNet.getUuid());
-
-    }
-
 
     @PostMapping("/calculation/{grossMonthlySalary}")
     public ResponseEntity<Map<String, String>> calculationAnnualNetEndpoint(@PathVariable @Min(MINIMUM_GROSS)BigDecimal grossMonthlySalary){

@@ -1,10 +1,10 @@
 package com.acoustic.service;
 
+import com.acoustic.awssettings.AwsSettings;
 import com.acoustic.entity.Health;
-import com.acoustic.rabbitmqsettings.RabbitMqSettings;
 import com.acoustic.rate.RatesConfigurationProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -12,13 +12,14 @@ import java.math.RoundingMode;
 
 @Service
 @RequiredArgsConstructor
-public class HealthService implements SalaryCalculatorService{
+public class HealthService implements SalaryCalculatorService {
 
     private final RatesConfigurationProperties ratesConfigurationProperties;
 
-    private final RabbitTemplate rabbitTemplate;
 
-    private final RabbitMqSettings rabbitMqSettings;
+    private final QueueMessagingTemplate queueMessagingTemplate;
+
+    private final AwsSettings awsSettings;
 
     @Override
     public String getDescription() {
@@ -26,8 +27,7 @@ public class HealthService implements SalaryCalculatorService{
     }
 
 
-
-    private BigDecimal calculateTotalZus(BigDecimal grossMonthlySalary){
+    private BigDecimal calculateTotalZus(BigDecimal grossMonthlySalary) {
         return grossMonthlySalary.subtract(grossMonthlySalary.multiply(this.ratesConfigurationProperties.getTotalZusRate()));
     }
 
@@ -38,6 +38,6 @@ public class HealthService implements SalaryCalculatorService{
 
     @Override
     public void sendHealth(Health health) {
-        this.rabbitTemplate.convertAndSend(this.rabbitMqSettings.getExchangeSalaryCalculator(), this.rabbitMqSettings.getRoutingKeySalaryCalculator(), health);
+        this.queueMessagingTemplate.convertAndSend(this.awsSettings.getSqsEndpoint(), health);
     }
 }

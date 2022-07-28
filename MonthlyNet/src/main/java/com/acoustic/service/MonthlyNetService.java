@@ -1,10 +1,10 @@
 package com.acoustic.service;
 
+import com.acoustic.awssettings.AwsSettings;
 import com.acoustic.entity.MonthlyNet;
-import com.acoustic.rabbitmqsettings.RabbitMqSettings;
 import com.acoustic.rate.RatesConfigurationProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,8 +16,10 @@ public class MonthlyNetService implements SalaryCalculatorService {
 
     private static final int MONTHS_NUMBER = 12;
     private final RatesConfigurationProperties rate;
-    private final RabbitTemplate rabbitTemplate;
-    private final RabbitMqSettings rabbitMqSettings;
+    private final QueueMessagingTemplate queueMessagingTemplate;
+
+    private final AwsSettings awsSettings;
+
 
     @Override
     public BigDecimal apply(BigDecimal grossMonthlySalary) {
@@ -35,7 +37,7 @@ public class MonthlyNetService implements SalaryCalculatorService {
 
     @Override
     public void sendMonthlyNet(MonthlyNet monthlyNet) {
-        this.rabbitTemplate.convertAndSend(this.rabbitMqSettings.getExchangeSalaryCalculator(), this.rabbitMqSettings.getRoutingKeySalaryCalculator(), monthlyNet);
+        this.queueMessagingTemplate.convertAndSend(this.awsSettings.getSqsEndpoint(), monthlyNet);
     }
 
     private BigDecimal calculateTotalZus(BigDecimal grossMonthlySalary) {

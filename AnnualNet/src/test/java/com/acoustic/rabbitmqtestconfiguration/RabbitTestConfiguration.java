@@ -1,6 +1,5 @@
 package com.acoustic.rabbitmqtestconfiguration;
 
-import com.acoustic.configuration.RabbitMqConfiguration;
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;

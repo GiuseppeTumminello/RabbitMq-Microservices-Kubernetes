@@ -2,11 +2,10 @@ package com.acoustic.controller;
 
 
 import com.acoustic.entity.MonthlyGross;
-import com.acoustic.repository.MonthlyGrossRepository;
+import com.acoustic.repository.MonthlyGrossDao;
 import com.acoustic.service.SalaryCalculatorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -27,17 +26,10 @@ import java.util.UUID;
 public class MonthlyGrossController {
 
     public static final int MINIMUM_GROSS = 2000;
-    private static final String MONTHLY_GROSS_RECEIVER_ID = "monthlyGrossReceiverId";
-    private final MonthlyGrossRepository monthlyGrossRepository;
+    private final MonthlyGrossDao monthlyGrossDao;
     private final SalaryCalculatorService salaryCalculatorService;
 
 
-    @RabbitListener(id = MONTHLY_GROSS_RECEIVER_ID, queues = "${rabbitmq.queueMonthlyGross}")
-    public void receiveMessage(MonthlyGross monthlyGross) {
-        log.warn(monthlyGross.getUuid().toString());
-        sendMonthlyGrossDataToSalaryCalculatorOrchestrator(monthlyGross.getAmount(), monthlyGross.getUuid());
-
-    }
 
 
     @PostMapping("/calculation/{grossMonthlySalary}")
@@ -54,7 +46,7 @@ public class MonthlyGrossController {
     }
 
     private MonthlyGross saveMonthlyGross(BigDecimal monthlyGross, UUID uuid) {
-        return this.monthlyGrossRepository.saveAndFlush(MonthlyGross.builder().description(this.salaryCalculatorService.getDescription()).amount(monthlyGross).uuid(uuid).build());
+        return this.monthlyGrossDao.save(MonthlyGross.builder().description(this.salaryCalculatorService.getDescription()).amount(monthlyGross).uuid(uuid).build());
     }
 
     private BigDecimal calculateMonthlyGross(BigDecimal grossMonthlySalary) {

@@ -1,8 +1,8 @@
 package com.acoustic.service;
 
 
+import com.acoustic.awssettings.AwsSettings;
 import com.acoustic.entity.AnnualGross;
-import com.acoustic.rabbitmqsettings.RabbitMqSettings;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class AnnualGrossAmount implements SalaryCalculatorService {
 
     private final RabbitTemplate rabbitTemplate;
 
-    private final RabbitMqSettings rabbitMqSettings;
+    private final AwsSettings awsSettings;
 
     @Override
     public String getDescription() {
@@ -26,7 +26,7 @@ public class AnnualGrossAmount implements SalaryCalculatorService {
 
     @Override
     public void sendAnnualGross(AnnualGross annualGross) {
-        this.rabbitTemplate.convertAndSend(this.rabbitMqSettings.getExchangeSalaryCalculator(), this.rabbitMqSettings.getRoutingKeySalaryCalculator(), annualGross);
+        this.rabbitTemplate.convertAndSend(this.awsSettings.getSqsEndpoint(), annualGross);
     }
 
 

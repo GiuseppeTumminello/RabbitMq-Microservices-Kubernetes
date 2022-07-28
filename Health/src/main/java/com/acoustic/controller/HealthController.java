@@ -2,11 +2,10 @@ package com.acoustic.controller;
 
 
 import com.acoustic.entity.Health;
-import com.acoustic.repository.HealthRepository;
+import com.acoustic.repository.HealthZusDao;
 import com.acoustic.service.SalaryCalculatorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,20 +21,9 @@ import java.util.UUID;
 @CrossOrigin
 @Slf4j
 public class HealthController {
-
-
     public static final int MINIMUM_GROSS = 2000;
-    private static final String HEALTH_RECEIVER_ID = "healthReceiverId";
-    private final HealthRepository healthRepository;
+    private final HealthZusDao healthZusDao;
     private final SalaryCalculatorService salaryCalculatorService;
-
-
-    @RabbitListener(id = HEALTH_RECEIVER_ID,queues = "${rabbitmq.queueHealth}")
-    public void receiveMessage(Health health) {
-        log.warn(health.getUuid().toString());
-        sendHealthDataToSalaryCalculatorOrchestrator(health.getAmount(), health.getUuid());
-
-    }
 
 
     @PostMapping("/calculation/{grossMonthlySalary}")
@@ -52,7 +40,7 @@ public class HealthController {
     }
 
     private Health saveHealth(BigDecimal health, UUID uuid) {
-        return this.healthRepository.saveAndFlush(Health.builder().description(this.salaryCalculatorService.getDescription()).amount(health).uuid(uuid).build());
+        return this.healthZusDao.save(Health.builder().description(this.salaryCalculatorService.getDescription()).amount(health).uuid(uuid).build());
     }
 
     private BigDecimal calculateHealth(BigDecimal grossMonthlySalary) {

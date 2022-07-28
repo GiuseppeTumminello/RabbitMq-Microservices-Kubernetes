@@ -12,8 +12,8 @@ public class AnnualNetDaoImplementation implements AnnualNetDao {
     public final DynamoDBMapper dynamoDBMapper;
 
     @Override
-    public AnnualNet save(AnnualNet annualGross) {
-        this.dynamoDBMapper.save(annualGross);
-        return annualGross;
+    public AnnualNet save(AnnualNet annualNet) {
+        this.dynamoDBMapper.save(annualNet);
+        return annualNet;
     }
 }

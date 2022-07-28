@@ -6,7 +6,6 @@ import com.acoustic.repository.AnnualGrossDao;
 import com.acoustic.service.SalaryCalculatorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -27,17 +26,8 @@ import java.util.UUID;
 public class AnnualGrossController {
 
     public static final int MINIMUM_GROSS = 2000;
-    private static final String ANNUAL_GROSS_RECEIVER_ID = "AnnualGrossReceiverId";
     private final SalaryCalculatorService salaryCalculatorService;
     private final AnnualGrossDao annualGrossDao;
-
-
-    @RabbitListener(id = ANNUAL_GROSS_RECEIVER_ID, queues = "${rabbitmq.queueAnnualGross}")
-    public void receiveMessages(AnnualGross dataProducer) {
-        log.warn(dataProducer.getDescription() + " " + dataProducer.getAmount() + " " + dataProducer.getUuid() + " " + dataProducer.getId());
-        sendAnnualGrossDataToSalaryCalculatorOrchestrator(dataProducer.getAmount(),dataProducer.getUuid());
-
-    }
 
 
     @PostMapping("/calculation/{grossMonthlySalary}")

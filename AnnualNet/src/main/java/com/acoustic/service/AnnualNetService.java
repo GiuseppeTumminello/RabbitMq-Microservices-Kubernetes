@@ -1,10 +1,11 @@
 package com.acoustic.service;
 
+import com.acoustic.awssettings.AwsSettings;
 import com.acoustic.entity.AnnualNet;
-import com.acoustic.rabbitmqsettings.RabbitMqSettings;
 import com.acoustic.rate.RatesConfigurationProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,7 +20,9 @@ public class AnnualNetService implements SalaryCalculatorService {
 
     private final RabbitTemplate rabbitTemplate;
 
-    private final RabbitMqSettings rabbitMqSettings;
+    private final AwsSettings awsSettings;
+
+    private final QueueMessagingTemplate queueMessagingTemplate;
 
     @Override
     public BigDecimal apply(BigDecimal grossMonthlySalary) {
@@ -60,7 +63,7 @@ public class AnnualNetService implements SalaryCalculatorService {
 
     @Override
     public void sendAnnualNet(AnnualNet annualNet) {
-        this.rabbitTemplate.convertAndSend(this.rabbitMqSettings.getExchangeSalaryCalculator(),this.rabbitMqSettings.getRoutingKeySalaryCalculator(), annualNet);
+        this.queueMessagingTemplate.convertAndSend(this.awsSettings.getSqsEndpoint(), annualNet);
     }
 
 

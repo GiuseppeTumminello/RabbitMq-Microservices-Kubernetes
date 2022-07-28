@@ -1,7 +1,7 @@
 package com.acoustic.configuration;
 
 
-import com.acoustic.dynamodb.DynamoDbCredential;
+import com.acoustic.awssettings.AwsSettings;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class DynamoDbConfiguration {
 
-    private final DynamoDbCredential dynamoDbCredential;
+    private final AwsSettings awsSettings;
 
     @Bean
     public DynamoDBMapper mapper(){
@@ -23,6 +23,6 @@ public class DynamoDbConfiguration {
     }
 
     public AmazonDynamoDB amazonDynamoDbConfig() {
-        return AmazonDynamoDBClientBuilder.standard().withCredentials(new ProfileCredentialsProvider(this.dynamoDbCredential.getProfileName())).withRegion(Regions.US_EAST_1).build();
+        return AmazonDynamoDBClientBuilder.standard().withCredentials(new ProfileCredentialsProvider(this.awsSettings.getProfileName())).withRegion(Regions.US_EAST_1).build();
     }
 }
