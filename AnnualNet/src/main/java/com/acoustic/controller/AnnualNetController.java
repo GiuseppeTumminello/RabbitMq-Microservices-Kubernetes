@@ -2,7 +2,7 @@ package com.acoustic.controller;
 
 
 import com.acoustic.entity.AnnualNet;
-import com.acoustic.repository.AnnualNetRepository;
+import com.acoustic.repository.AnnualNetDao;
 import com.acoustic.service.SalaryCalculatorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ import java.util.UUID;
 @Slf4j
 public class AnnualNetController{
     public static final int MINIMUM_GROSS = 2000;
-    private final AnnualNetRepository annualNetRepository;
+    private final AnnualNetDao annualNetRepository;
     private final SalaryCalculatorService salaryCalculatorService;
     private static final String ANNUAL_NET_RECEIVER_ID = "AnnualNetReceiverId";
 
@@ -53,7 +53,7 @@ public class AnnualNetController{
     }
 
     private AnnualNet saveAnnualNet(BigDecimal annualNet, UUID uuid) {
-        return this.annualNetRepository.saveAndFlush(AnnualNet.builder().description(this.salaryCalculatorService.getDescription()).amount(annualNet).uuid(uuid).build());
+        return this.annualNetRepository.save(AnnualNet.builder().description(this.salaryCalculatorService.getDescription()).amount(annualNet).uuid(uuid).build());
     }
 
     private BigDecimal calculateAnnualNet(BigDecimal grossMonthlySalary) {

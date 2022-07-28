@@ -14,9 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 @ConfigurationProperties(prefix = "dynamodb")
 public class DynamoDbCredential {
 
-    private String serviceEndpoint;
-    private String accessKey;
-    private String secretKey;
-    private String region;
+
+    private String profileName;
 
 }
