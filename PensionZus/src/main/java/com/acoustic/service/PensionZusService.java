@@ -1,10 +1,10 @@
 package com.acoustic.service;
 
+import com.acoustic.awssettings.AwsSettings;
 import com.acoustic.entity.PensionZus;
-import com.acoustic.rabbitmqsettings.RabbitMqSettings;
 import com.acoustic.rate.RatesConfigurationProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,9 +16,10 @@ public class PensionZusService implements SalaryCalculatorService{
 
     private final RatesConfigurationProperties ratesConfigurationProperties;
 
-    private final RabbitTemplate rabbitTemplate;
 
-    private final RabbitMqSettings rabbitMqSettings;
+    private final QueueMessagingTemplate queueMessagingTemplate;
+
+    private final AwsSettings awsSettings;
 
 
     @Override
@@ -28,7 +29,7 @@ public class PensionZusService implements SalaryCalculatorService{
 
     @Override
     public void sendPensionZus(PensionZus pensionZus) {
-        this.rabbitTemplate.convertAndSend(this.rabbitMqSettings.getExchangeSalaryCalculator(), this.rabbitMqSettings.getRoutingKeySalaryCalculator(), pensionZus);
+        this.queueMessagingTemplate.convertAndSend(this.awsSettings.getSqsEndpoint(), pensionZus);
     }
 
     @Override

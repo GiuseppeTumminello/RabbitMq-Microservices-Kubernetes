@@ -3,7 +3,7 @@ package com.acoustic.controller;
 
 import com.acoustic.awssettings.AwsSettings;
 import com.acoustic.entity.MonthlyNet;
-import com.acoustic.repository.MonthlyNetRepository;
+import com.acoustic.repository.MonthlyNetDao;
 import com.acoustic.service.SalaryCalculatorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import java.util.UUID;
 public class MonthlyNetController {
 
     public static final int MINIMUM_GROSS = 2000;
-    private final MonthlyNetRepository monthlyNetRepository;
+    private final MonthlyNetDao monthlyNetDao;
     private final SalaryCalculatorService salaryCalculatorService;
 
     private final AwsSettings awsSettings;
@@ -65,7 +65,7 @@ public class MonthlyNetController {
     }
 
     private MonthlyNet saveMonthlyNetData(BigDecimal monthlyNet, UUID uuid) {
-        return this.monthlyNetRepository.saveAndFlush(MonthlyNet.builder().description(this.salaryCalculatorService.getDescription()).amount(monthlyNet).uuid(uuid).build());
+        return this.monthlyNetDao.save(MonthlyNet.builder().description(this.salaryCalculatorService.getDescription()).amount(monthlyNet).uuid(uuid).build());
     }
 
     private BigDecimal calculateMonthlyNet(BigDecimal grossMonthlySalary) {
