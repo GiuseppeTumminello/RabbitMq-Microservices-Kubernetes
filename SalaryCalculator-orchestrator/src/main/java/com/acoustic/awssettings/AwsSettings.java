@@ -14,6 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 @ConfigurationProperties(prefix = "aws")
 public class AwsSettings {
 
+    private String arnSalaryCalculatorTopic;
     private String profileName;
     private String sqsEndpoint;
 }

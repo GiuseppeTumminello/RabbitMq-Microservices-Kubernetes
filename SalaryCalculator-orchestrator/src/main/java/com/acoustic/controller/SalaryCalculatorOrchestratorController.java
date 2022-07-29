@@ -1,14 +1,12 @@
 package com.acoustic.controller;
 
 
-import com.acoustic.entity.MicroservicesData2;
+import com.acoustic.entity.MicroservicesData;
 import com.acoustic.entity.SalaryCalculatorOrchestratorData;
 import com.acoustic.jobcategories.JobCategoriesConfigurationProperties;
 import com.acoustic.repository.MicroservicesDataDao;
-import com.acoustic.repository.SalaryCalculatorOrchestratorDataRepository;
-import com.amazonaws.services.sns.AmazonSNSClient;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.acoustic.repository.SalaryCalculatorOrchestratorDao;
+import com.acoustic.service.CollectResponsesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
@@ -36,19 +34,16 @@ public class SalaryCalculatorOrchestratorController {
     private static final int MINIMUM_GROSS = 2000;
 
     private final JobCategoriesConfigurationProperties jobCategoriesConfigurationProperties;
-    private final SalaryCalculatorOrchestratorDataRepository salaryCalculatorOrchestratorDataRepository;
+    private final SalaryCalculatorOrchestratorDao salaryCalculatorOrchestratorDao;
 
     private final MicroservicesDataDao microservicesDataDao;
 
-
-    private final AmazonSNSClient amazonSNSClient;
-
-    private static final String endpointTopic = "arn:aws:sns:us-east-1:342003767516:salary-calculator-topic";
+    private final CollectResponsesService collectResponsesService;
 
    @SqsListener("salary-calculator-queue")
-    public void messageReceiver(MicroservicesData2 microservicesData2) {
-       log.info(microservicesData2.toString());
-        this.microservicesDataDao.save(microservicesData2);
+    public void messageReceiver(MicroservicesData microservicesData) {
+       log.info(microservicesData.toString());
+       this.microservicesDataDao.save(microservicesData);
     }
 
 
@@ -64,26 +59,24 @@ public class SalaryCalculatorOrchestratorController {
     }
 
     @PostMapping("/calculations/{grossMonthlySalary}")
-    public ResponseEntity<Map<String, BigDecimal>> calculateSalary(@PathVariable @Min(value = MINIMUM_GROSS, message = "Must be Greater than or equal to 2000.00") @NotNull BigDecimal grossMonthlySalary, @RequestParam(required = false) String departmentName, @RequestParam(required = false) Integer jobTitleId) throws JsonProcessingException {
+    public ResponseEntity<Map<String, BigDecimal>> calculateSalary(@PathVariable @Min(value = MINIMUM_GROSS, message = "Must be Greater than or equal to 2000.00") @NotNull BigDecimal grossMonthlySalary, @RequestParam(required = false) String departmentName, @RequestParam(required = false) Integer jobTitleId)  {
         var uuid = UUID.randomUUID();
-        ObjectMapper objectMapper = new ObjectMapper();
-        this.amazonSNSClient.publish("arn:aws:sns:us-east-1:342003767516:salary-calculator-topic", objectMapper.writeValueAsString(MicroservicesData2.builder().amount(grossMonthlySalary).uuid(uuid).description(this.getClass().getSimpleName()).id("random").build()), "ciao");
-        microservicesDataDao.getByName("Total zus");
+        this.collectResponsesService.sendDataToMicroservices(grossMonthlySalary, uuid);
+        var response = this.collectResponsesService.collectMicroservicesResponse(uuid);
+        if (departmentName == null || jobTitleId == null) {
+            return ResponseEntity.status(HttpStatus.OK).body(response);
 
-//        this.collectResponsesService.sendDataToMicroservices(grossMonthlySalary, uuid);
-//        var response = this.collectResponsesService.collectMicroservicesResponse(uuid);
-//        if (departmentName == null || jobTitleId == null) {
-//            return ResponseEntity.status(HttpStatus.OK).body(response);
-//        }
-//        List<String> jobTitlesList = this.jobCategoriesConfigurationProperties.getJobDepartmentAndTitles().get(departmentName);
-//        if (!this.jobCategoriesConfigurationProperties.getJobDepartmentAndTitles().containsKey(departmentName.toLowerCase())) {
-//            throw new IllegalArgumentException("Invalid department name");
-//        }
-//        if (jobTitleId > jobTitlesList.size() || jobTitleId <= 0) {
-//            throw new IllegalArgumentException("Wrong job id");
-//        }
-//        return ResponseEntity.status(HttpStatus.OK).body(getAverage(grossMonthlySalary, jobTitlesList.get(jobTitleId - 1), response));
-        return null;
+        }
+        List<String> jobTitlesList = this.jobCategoriesConfigurationProperties.getJobDepartmentAndTitles().get(departmentName);
+        if (!this.jobCategoriesConfigurationProperties.getJobDepartmentAndTitles().containsKey(departmentName.toLowerCase())) {
+            throw new IllegalArgumentException("Invalid department name");
+        }
+        if (jobTitleId > jobTitlesList.size() || jobTitleId <= 0) {
+            throw new IllegalArgumentException("Wrong job id");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(getAverage(grossMonthlySalary, jobTitlesList.get(jobTitleId - 1), response));
+
     }
 
 
@@ -95,8 +88,8 @@ public class SalaryCalculatorOrchestratorController {
     }
 
     public BigDecimal statistic(String jobTitleId, BigDecimal grossMonthlySalary) {
-        this.salaryCalculatorOrchestratorDataRepository.save(SalaryCalculatorOrchestratorData.builder().grossMonthlySalary(grossMonthlySalary).jobTitle(jobTitleId).build());
-        return this.salaryCalculatorOrchestratorDataRepository.findAverageByJobTitle((jobTitleId)).setScale(2, RoundingMode.HALF_EVEN);
+        this.salaryCalculatorOrchestratorDao.save(SalaryCalculatorOrchestratorData.builder().grossMonthlySalary(grossMonthlySalary).jobTitle(jobTitleId).build());
+        return this.salaryCalculatorOrchestratorDao.findAverageByJobTitle((jobTitleId)).setScale(2, RoundingMode.HALF_EVEN);
     }
 }
 

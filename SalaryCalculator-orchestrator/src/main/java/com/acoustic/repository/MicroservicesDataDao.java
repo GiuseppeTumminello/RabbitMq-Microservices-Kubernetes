@@ -1,11 +1,13 @@
 package com.acoustic.repository;
 
 
-import com.acoustic.entity.MicroservicesData2;
+import com.acoustic.entity.MicroservicesData;
+
+import java.util.List;
 
 
 public interface MicroservicesDataDao {
 
-     MicroservicesData2 save(MicroservicesData2 microservicesData2);
-     void getByName(String description);
+     MicroservicesData save(MicroservicesData microservicesData);
+     List<MicroservicesData> findByUuid(String description);
 }

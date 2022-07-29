@@ -1,6 +1,6 @@
 package com.acoustic.repository;
 
-import com.acoustic.entity.MicroservicesData2;
+import com.acoustic.entity.MicroservicesData;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
@@ -9,7 +9,7 @@ import com.amazonaws.services.dynamodbv2.model.Condition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -17,23 +17,31 @@ public class MicroservicesDataDaoImplementation implements MicroservicesDataDao 
 
     public final DynamoDBMapper dynamoDBMapper;
 
+    public static final String UUID_COLUMN_NAME = "uuid";
+
 
 
     @Override
-    public MicroservicesData2 save(MicroservicesData2 Microservices) {
+    public MicroservicesData save(MicroservicesData Microservices) {
+        var start = System.currentTimeMillis();
         this.dynamoDBMapper.save(Microservices);
+        var end = System.currentTimeMillis();
+        System.out.println("Save time: " + (end - start) + "milliseconds");
         return Microservices;
+
     }
 
 
     @Override
-    public void getByName(String name) {
+    public List<MicroservicesData> findByUuid(String uuid) {
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-        scanExpression.addFilterCondition("description", new Condition()
+        scanExpression.addFilterCondition(UUID_COLUMN_NAME, new Condition()
                 .withComparisonOperator(ComparisonOperator.EQ)
-                .withAttributeValueList(new AttributeValue().withS(name)));
-        var data = new ArrayList<>(dynamoDBMapper.scan(MicroservicesData2.class, scanExpression));
-        data.forEach(e -> System.out.println(e.getDescription() + " " + e.getAmount()));
+                .withAttributeValueList(new AttributeValue().withS(uuid)));
+        return dynamoDBMapper.scan(MicroservicesData.class, scanExpression);
+
+
 
     }
+
 }
