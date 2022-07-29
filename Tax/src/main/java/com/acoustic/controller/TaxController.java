@@ -2,11 +2,14 @@ package com.acoustic.controller;
 
 
 import com.acoustic.entity.Tax;
-import com.acoustic.repository.TaxRepository;
+import com.acoustic.repository.TaxDao;
 import com.acoustic.service.SalaryCalculatorService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.cloud.aws.messaging.config.annotation.NotificationMessage;
+import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,15 +27,23 @@ import java.util.UUID;
 public class TaxController {
 
     public static final int MINIMUM_GROSS = 2000;
-    private  static final String TAX_RECEIVER_ID = "taxReceiverId";
-    private final TaxRepository taxRepository;
+    private final TaxDao taxDao;
     private final SalaryCalculatorService salaryCalculatorService;
+    private final ObjectMapper objectMapper;
+    private final static String TAX_QUEUE = "tax-queue";
 
 
-    @RabbitListener(id = TAX_RECEIVER_ID,queues = "${rabbitmq.queueTax}")
-    public void receiveMessage(Tax tax) {
+    @SqsListener(TAX_QUEUE)
+    public void messageReceiver(@NotificationMessage String snsMessage) {
+        log.info("Message received: {}", snsMessage);
+        var tax = convertJsonToTaxObject(snsMessage);
         sendTaxDataToSalaryCalculatorOrchestrator(tax.getAmount(), tax.getUuid());
+    }
 
+
+    @SneakyThrows
+    public Tax convertJsonToTaxObject(String snsMessage) {
+        return this.objectMapper.readValue(snsMessage, Tax.class);
     }
 
 
@@ -50,7 +61,7 @@ public class TaxController {
     }
 
     private Tax saveTax(BigDecimal tax, UUID uuid) {
-        return this.taxRepository.saveAndFlush(Tax.builder().description(this.salaryCalculatorService.getDescription()).amount(tax).uuid(uuid).build());
+        return this.taxDao.save(Tax.builder().description(this.salaryCalculatorService.getDescription()).amount(tax).uuid(uuid).build());
     }
 
     private BigDecimal calculateTax(BigDecimal grossMonthlySalary) {

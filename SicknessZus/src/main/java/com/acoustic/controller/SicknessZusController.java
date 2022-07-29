@@ -2,11 +2,14 @@ package com.acoustic.controller;
 
 
 import com.acoustic.entity.SicknessZus;
-import com.acoustic.repository.SicknessZusRepository;
+import com.acoustic.repository.SicknessZusDao;
 import com.acoustic.service.SalaryCalculatorService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.cloud.aws.messaging.config.annotation.NotificationMessage;
+import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -26,20 +29,28 @@ import java.util.UUID;
 @Slf4j
 public class SicknessZusController {
 
-    private  static final String SICKNESS_ZUS_RECEIVER_ID = "sicknessZusReceiverId";
 
     public static final int MINIMUM_GROSS = 2000;
 
-    private final SicknessZusRepository sicknessZusRepository;
+    private final SicknessZusDao sicknessZusDao;
     private final SalaryCalculatorService salaryCalculatorService;
 
+    private final ObjectMapper objectMapper;
+
+    private static final String SICKNESS_ZUS_QUEUE = "sickness-zus-queue";
 
 
-    @RabbitListener(id = SICKNESS_ZUS_RECEIVER_ID, queues = "${rabbitmq.queueSicknessZus}")
-    public void receiveMessage(SicknessZus sicknessZus) {
-        log.warn(sicknessZus.getUuid().toString());
+    @SqsListener(SICKNESS_ZUS_QUEUE)
+    public void messageReceiver(@NotificationMessage String snsMessage) {
+        log.info("Message received: {}", snsMessage);
+        var sicknessZus = convertJsonToSicknessZusObject(snsMessage);
         sendSicknessZusDataToSalaryCalculatorOrchestrator(sicknessZus.getAmount(), sicknessZus.getUuid());
+    }
 
+
+    @SneakyThrows
+    public SicknessZus convertJsonToSicknessZusObject(String snsMessage) {
+        return this.objectMapper.readValue(snsMessage, SicknessZus.class);
     }
 
 
@@ -57,7 +68,7 @@ public class SicknessZusController {
     }
 
     private SicknessZus saveSicknessZus(BigDecimal sicknessZus, UUID uuid) {
-        return this.sicknessZusRepository.saveAndFlush(SicknessZus.builder().description(this.salaryCalculatorService.getDescription()).amount(sicknessZus).uuid(uuid).build());
+        return this.sicknessZusDao.save(SicknessZus.builder().description(this.salaryCalculatorService.getDescription()).amount(sicknessZus).uuid(uuid).build());
     }
 
     private BigDecimal calculateSicknessZus(BigDecimal grossMonthlySalary) {

@@ -4,8 +4,12 @@ package com.acoustic.controller;
 import com.acoustic.entity.PensionZus;
 import com.acoustic.repository.PensionZusDao;
 import com.acoustic.service.SalaryCalculatorService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.aws.messaging.config.annotation.NotificationMessage;
+import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +32,24 @@ public class PensionZusController {
     public static final int MINIMUM_SALARY = 2000;
     private final PensionZusDao pensionZusDao;
     private final SalaryCalculatorService salaryCalculatorService;
+
+    private final ObjectMapper objectMapper;
+
+    private static final String PENSION_ZUS_QUEUE = "pension-zus-queue";
+
+
+    @SqsListener(PENSION_ZUS_QUEUE)
+    public void messageReceiver(@NotificationMessage String snsMessage) {
+        log.info("Message received: {}", snsMessage);
+        var pensionZus = convertJsonToPensionZusObject(snsMessage);
+        sendPensionZusDataToSalaryCalculatorOrchestrator(pensionZus.getAmount(), pensionZus.getUuid());
+    }
+
+
+    @SneakyThrows
+    public PensionZus convertJsonToPensionZusObject(String snsMessage) {
+        return this.objectMapper.readValue(snsMessage, PensionZus.class);
+    }
 
 
 

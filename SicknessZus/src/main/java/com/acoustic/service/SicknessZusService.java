@@ -1,10 +1,10 @@
 package com.acoustic.service;
 
+import com.acoustic.awssettings.AwsSettings;
 import com.acoustic.entity.SicknessZus;
-import com.acoustic.rabbitmqsettings.RabbitMqSettings;
 import com.acoustic.rate.RatesConfigurationProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,8 +16,9 @@ public class SicknessZusService implements SalaryCalculatorService{
 
     private final RatesConfigurationProperties ratesConfigurationProperties;
 
-    private final RabbitTemplate rabbitTemplate;
-    private final RabbitMqSettings rabbitMqSettings;
+    private final AwsSettings awsSettings;
+    private final QueueMessagingTemplate queueMessagingTemplate;
+
 
 
     @Override
@@ -27,7 +28,7 @@ public class SicknessZusService implements SalaryCalculatorService{
 
     @Override
     public void sendSicknessZus(SicknessZus sicknessZus) {
-        this.rabbitTemplate.convertAndSend(this.rabbitMqSettings.getExchangeSalaryCalculator(), this.rabbitMqSettings.getRoutingKeySalaryCalculator(), sicknessZus);
+        this.queueMessagingTemplate.convertAndSend(this.awsSettings.getSqsEndpoint(), sicknessZus);
     }
 
     @Override

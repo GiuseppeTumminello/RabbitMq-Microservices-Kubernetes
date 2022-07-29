@@ -1,12 +1,15 @@
 package com.acoustic.controller;
 
 
-import com.acoustic.awssettings.AwsSettings;
 import com.acoustic.entity.MonthlyNet;
 import com.acoustic.repository.MonthlyNetDao;
 import com.acoustic.service.SalaryCalculatorService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.aws.messaging.config.annotation.NotificationMessage;
+import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,27 +30,22 @@ public class MonthlyNetController {
     public static final int MINIMUM_GROSS = 2000;
     private final MonthlyNetDao monthlyNetDao;
     private final SalaryCalculatorService salaryCalculatorService;
+    private final ObjectMapper objectMapper;
 
-    private final AwsSettings awsSettings;
+    private static final String MONTHLY_NET_QUEUE = "monthly-net-queue";
 
 
+    @SqsListener(MONTHLY_NET_QUEUE)
+    public void messageReceiver(@NotificationMessage String snsMessage) {
+        log.info("Message received: {}", snsMessage);
+        var monthlyNet = convertJsonToMonthlyNetObject(snsMessage);
+        sendMonthlyNetDataToSalaryCalculatorOrchestrator(monthlyNet.getAmount(), monthlyNet.getUuid());
+    }
 
 
-//    @RabbitListener(id = MONTHLY_NET_RECEIVER_ID, queues = "${rabbitmq.queueMonthlyNet}")
-//    public void receiveMessage(MonthlyNet monthlyNet) {
-//        log.warn(monthlyNet.getUuid().toString());
-//        sendMonthlyNetDataToSalaryCalculatorOrchestrator(monthlyNet.getAmount(), monthlyNet.getUuid());
-//
-//    }
-
-//    @SqsListener(value = "")
-//    public void loadMessageFromSQS(String message) {
-//        log.error(message);
-//    }
-
-    @GetMapping("/send")
-    public void sendMessageToQueue(){
-        this.salaryCalculatorService.sendMonthlyNet(MonthlyNet.builder().amount(BigDecimal.valueOf(6000)).uuid(UUID.randomUUID()).build());
+    @SneakyThrows
+    public MonthlyNet convertJsonToMonthlyNetObject(String snsMessage) {
+        return this.objectMapper.readValue(snsMessage, MonthlyNet.class);
     }
 
 

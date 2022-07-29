@@ -4,8 +4,12 @@ package com.acoustic.controller;
 import com.acoustic.entity.AnnualGross;
 import com.acoustic.repository.AnnualGrossDao;
 import com.acoustic.service.SalaryCalculatorService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.aws.messaging.config.annotation.NotificationMessage;
+import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +32,23 @@ public class AnnualGrossController {
     public static final int MINIMUM_GROSS = 2000;
     private final SalaryCalculatorService salaryCalculatorService;
     private final AnnualGrossDao annualGrossDao;
+    private final ObjectMapper objectMapper;
+    private static final String ANNUAL_GROSS_QUEUE = "annual-gross-queue";
+
+
+    @SqsListener(ANNUAL_GROSS_QUEUE)
+    public void messageReceiver(@NotificationMessage String snsMessage) {
+        log.info("Message received: {}", snsMessage);
+        var annualGross = convertJsonToAnnualGrossObject(snsMessage);
+        sendAnnualGrossDataToSalaryCalculatorOrchestrator(annualGross.getAmount(), annualGross.getUuid());
+    }
+
+
+    @SneakyThrows
+    public AnnualGross convertJsonToAnnualGrossObject(String snsMessage) {
+        return this.objectMapper.readValue(snsMessage, AnnualGross.class);
+    }
+
 
 
     @PostMapping("/calculation/{grossMonthlySalary}")

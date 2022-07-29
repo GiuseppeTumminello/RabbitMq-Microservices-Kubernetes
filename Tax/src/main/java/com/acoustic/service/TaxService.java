@@ -1,10 +1,10 @@
 package com.acoustic.service;
 
+import com.acoustic.awssettings.AwsSettings;
 import com.acoustic.entity.Tax;
-import com.acoustic.rabbitmqsettings.RabbitMqSettings;
 import com.acoustic.rate.RatesConfigurationProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,8 +16,8 @@ public class TaxService implements SalaryCalculatorService {
 
     private static final int MONTHS_NUMBER = 12;
     private final RatesConfigurationProperties rate;
-    private final RabbitMqSettings rabbitMqSettings;
-    private final RabbitTemplate rabbitTemplate;
+    private final QueueMessagingTemplate queueMessagingTemplate;
+    private final AwsSettings awsSettings;
 
 
     @Override
@@ -36,7 +36,7 @@ public class TaxService implements SalaryCalculatorService {
 
     @Override
     public void sendTax(Tax tax) {
-        this.rabbitTemplate.convertAndSend(this.rabbitMqSettings.getExchangeSalaryCalculator(), this.rabbitMqSettings.getRoutingKeySalaryCalculator(), tax);
+        this.queueMessagingTemplate.convertAndSend(this.awsSettings.getSqsEndpoint(), tax);
     }
 
     private BigDecimal calculateTotalZus(BigDecimal grossMonthlySalary) {

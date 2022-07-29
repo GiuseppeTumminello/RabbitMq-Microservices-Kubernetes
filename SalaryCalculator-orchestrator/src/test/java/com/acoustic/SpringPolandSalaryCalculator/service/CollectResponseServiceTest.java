@@ -1,7 +1,6 @@
 package com.acoustic.SpringPolandSalaryCalculator.service;
 
-import com.acoustic.entity.MicroservicesData;
-import com.acoustic.repository.MicroservicesDataRepository;
+import com.acoustic.entity.MicroservicesData2;
 import com.acoustic.service.CollectResponsesService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,9 +32,9 @@ public class CollectResponseServiceTest {
     @ParameterizedTest
     @CsvSource({"722.00, Total zus", "999.00, Annual net", "1250.33, Annual gross"})
     public void collectMicroservicesResponse(BigDecimal taxAmount, String description) {
-        ArrayList<MicroservicesData> microservicesData = new ArrayList<>();
-        microservicesData.add(MicroservicesData.builder().description(description).amount(taxAmount).build());
-        given(this.microservicesDataRepository.findDataByUuid(any())).willReturn(microservicesData);
+        ArrayList<MicroservicesData2> microservicesDatum2s = new ArrayList<>();
+        microservicesDatum2s.add(MicroservicesData2.builder().description(description).amount(taxAmount).build());
+        given(this.microservicesDataRepository.findDataByUuid(any())).willReturn(microservicesDatum2s);
         Assertions.assertEquals(Map.of(description, taxAmount), this.collectResponsesService.collectMicroservicesResponse(UUID.randomUUID()));
         assertThat(this.collectResponsesService.collectMicroservicesResponse(UUID.randomUUID()))
                 .isEqualTo(Map.of(description, taxAmount));

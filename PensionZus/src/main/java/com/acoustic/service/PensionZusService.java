@@ -30,6 +30,7 @@ public class PensionZusService implements SalaryCalculatorService{
     @Override
     public void sendPensionZus(PensionZus pensionZus) {
         this.queueMessagingTemplate.convertAndSend(this.awsSettings.getSqsEndpoint(), pensionZus);
+
     }
 
     @Override

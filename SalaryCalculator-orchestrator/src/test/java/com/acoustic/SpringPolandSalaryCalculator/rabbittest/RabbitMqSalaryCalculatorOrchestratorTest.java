@@ -2,7 +2,7 @@ package com.acoustic.SpringPolandSalaryCalculator.rabbittest;
 
 import com.acoustic.SpringPolandSalaryCalculator.rabbitmqtestconfiguration.RabbitTestConfiguration;
 import com.acoustic.controller.SalaryCalculatorOrchestratorController;
-import com.acoustic.entity.MicroservicesData;
+import com.acoustic.entity.MicroservicesData2;
 import com.acoustic.rabbitmqsettings.RabbitMqSettings;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -42,7 +42,7 @@ public class RabbitMqSalaryCalculatorOrchestratorTest {
     public void receiveMessageTest(BigDecimal grossMonthlySalary, int id) {
         this.salaryCalculatorOrchestratorController = this.harness.getSpy(this.rabbitMqSettings.getReceiverId());
         assertNotNull(this.salaryCalculatorOrchestratorController);
-        var microservicesData = MicroservicesData.builder().id(id).amount(grossMonthlySalary).uuid(UUID.randomUUID()).build();
+        var microservicesData = MicroservicesData2.builder().id(id).amount(grossMonthlySalary).uuid(UUID.randomUUID()).build();
         this.testRabbitTemplate.convertAndSend(this.rabbitMqSettings.getQueueSalaryCalculator(), microservicesData);
         verify(this.salaryCalculatorOrchestratorController).messageReceiver(microservicesData);
     }

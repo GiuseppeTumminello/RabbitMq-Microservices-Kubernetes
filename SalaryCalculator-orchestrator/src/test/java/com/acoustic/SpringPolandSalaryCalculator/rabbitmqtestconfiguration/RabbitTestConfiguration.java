@@ -1,6 +1,5 @@
 package com.acoustic.SpringPolandSalaryCalculator.rabbitmqtestconfiguration;
 
-import com.acoustic.configuartion.RabbitMqConfiguration;
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
