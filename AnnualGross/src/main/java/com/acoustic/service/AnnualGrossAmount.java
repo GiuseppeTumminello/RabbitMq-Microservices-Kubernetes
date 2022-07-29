@@ -4,7 +4,7 @@ package com.acoustic.service;
 import com.acoustic.awssettings.AwsSettings;
 import com.acoustic.entity.AnnualGross;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,9 +15,10 @@ import java.math.RoundingMode;
 public class AnnualGrossAmount implements SalaryCalculatorService {
     public static final int MONTHS_NUMBER = 12;
 
-    private final RabbitTemplate rabbitTemplate;
-
     private final AwsSettings awsSettings;
+
+    private final QueueMessagingTemplate queueMessagingTemplate;
+
 
     @Override
     public String getDescription() {
@@ -26,7 +27,7 @@ public class AnnualGrossAmount implements SalaryCalculatorService {
 
     @Override
     public void sendAnnualGross(AnnualGross annualGross) {
-        this.rabbitTemplate.convertAndSend(this.awsSettings.getSqsEndpoint(), annualGross);
+        this.queueMessagingTemplate.convertAndSend(this.awsSettings.getSqsEndpoint(), annualGross);
     }
 
 

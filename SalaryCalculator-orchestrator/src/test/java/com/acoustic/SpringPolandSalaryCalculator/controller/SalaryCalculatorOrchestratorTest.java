@@ -36,7 +36,7 @@ public class SalaryCalculatorOrchestratorTest {
     @ParameterizedTest
     @CsvSource({"6000.00, DevOps Engineer, Average", "7000.00, Software Developer, Average", "15891.68, Software Engineer, Average"})
     public void getAverage(BigDecimal grossMonthlySalary, String jobTitleName, String Description) {
-        given(this.salaryCalculatorOrchestratorDao.findGrossSalaryByJobTitle(any())).willReturn(grossMonthlySalary);
+        given(this.salaryCalculatorOrchestratorDao.findAverageByJobTitle(any())).willReturn(grossMonthlySalary);
         given(this.salaryCalculatorOrchestratorDao.save(any())).willReturn(SalaryCalculatorOrchestratorData.builder().grossMonthlySalary(grossMonthlySalary).build());
         given(this.salaryCalculatorOrchestratorController.statistic(jobTitleName, any())).willReturn(grossMonthlySalary);
         assertThat(this.salaryCalculatorOrchestratorController.getAverage(grossMonthlySalary, jobTitleName, new LinkedHashMap<>(Map.of(jobTitleName, grossMonthlySalary))))
@@ -46,7 +46,7 @@ public class SalaryCalculatorOrchestratorTest {
     @ParameterizedTest
     @CsvSource({"6000.00, DevOps Engineer", "7000.00, Software Developer", "15891.68, Software Engineer"})
     public void statistic(BigDecimal grossMonthlySalary, String jobTitleName) {
-        given(this.salaryCalculatorOrchestratorDao.findGrossSalaryByJobTitle(any())).willReturn(grossMonthlySalary);
+        given(this.salaryCalculatorOrchestratorDao.findAverageByJobTitle(any())).willReturn(grossMonthlySalary);
         given(this.salaryCalculatorOrchestratorDao.save(any())).willReturn(SalaryCalculatorOrchestratorData.builder().grossMonthlySalary(grossMonthlySalary).jobTitle("DevOps Engineer").build());
         Assertions.assertEquals(grossMonthlySalary, salaryCalculatorOrchestratorController.statistic(jobTitleName, grossMonthlySalary));
         assertThat(this.salaryCalculatorOrchestratorController.statistic(jobTitleName, grossMonthlySalary))

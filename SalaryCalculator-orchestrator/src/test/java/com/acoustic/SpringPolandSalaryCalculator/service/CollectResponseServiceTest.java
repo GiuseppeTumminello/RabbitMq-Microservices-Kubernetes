@@ -1,6 +1,7 @@
 package com.acoustic.SpringPolandSalaryCalculator.service;
 
 import com.acoustic.entity.MicroservicesData;
+import com.acoustic.repository.MicroservicesDataDao;
 import com.acoustic.service.CollectResponsesService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,7 +25,7 @@ import static org.mockito.BDDMockito.given;
 @ActiveProfiles("test")
 public class CollectResponseServiceTest {
     @MockBean
-    private MicroservicesDataRepository microservicesDataRepository;
+    private MicroservicesDataDao microservicesDataRepository;
     @Autowired
     private CollectResponsesService collectResponsesService;
 
@@ -34,7 +35,7 @@ public class CollectResponseServiceTest {
     public void collectMicroservicesResponse(BigDecimal taxAmount, String description) {
         ArrayList<MicroservicesData> microservicesDatum2s = new ArrayList<>();
         microservicesDatum2s.add(MicroservicesData.builder().description(description).amount(taxAmount).build());
-        given(this.microservicesDataRepository.findDataByUuid(any())).willReturn(microservicesDatum2s);
+        given(this.microservicesDataRepository.findByUuid(any())).willReturn(microservicesDatum2s);
         Assertions.assertEquals(Map.of(description, taxAmount), this.collectResponsesService.collectMicroservicesResponse(UUID.randomUUID()));
         assertThat(this.collectResponsesService.collectMicroservicesResponse(UUID.randomUUID()))
                 .isEqualTo(Map.of(description, taxAmount));

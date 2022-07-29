@@ -23,10 +23,7 @@ public class MicroservicesDataDaoImplementation implements MicroservicesDataDao 
 
     @Override
     public MicroservicesData save(MicroservicesData Microservices) {
-        var start = System.currentTimeMillis();
         this.dynamoDBMapper.save(Microservices);
-        var end = System.currentTimeMillis();
-        System.out.println("Save time: " + (end - start) + "milliseconds");
         return Microservices;
 
     }
@@ -39,8 +36,6 @@ public class MicroservicesDataDaoImplementation implements MicroservicesDataDao 
                 .withComparisonOperator(ComparisonOperator.EQ)
                 .withAttributeValueList(new AttributeValue().withS(uuid)));
         return dynamoDBMapper.scan(MicroservicesData.class, scanExpression);
-
-
 
     }
 
