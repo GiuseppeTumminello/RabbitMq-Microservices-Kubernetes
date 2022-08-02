@@ -11,9 +11,8 @@ spec:
     port: 8098
     protocol: TCP
     targetPort: 8098
-    nodePort: 30542
   selector:
     app: totalzus
-  type: NodePort
+  type: LoadBalancer
 status:
   loadBalancer: {}

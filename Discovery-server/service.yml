@@ -10,9 +10,8 @@ spec:
   - name: 8761-8761
     port: 8761
     targetPort: 8761
-    nodePort: 30529
   selector:
     app: discovery-server
-  type: NodePort
+  type: LoadBalancer
 status:
   loadBalancer: {}

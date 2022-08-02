@@ -21,8 +21,7 @@ spec:
       - image: rabbitmq-microservices-kubernates_api-gateway
         name: rabbitmq-microservices-kubernates-api-gateway-6djk9
         imagePullPolicy: IfNotPresent
-        resources: {}
         env:
           - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
             value: http://discovery-server:8761/eureka
-status: {}
+

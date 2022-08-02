@@ -18,10 +18,9 @@ spec:
         app: discovery-server
     spec:
       containers:
-        - image: rabbitmq-microservices-kubernates_discovery-server
+        - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/discovery-server:latest
           name: rabbitmq-microservices-kubernates-discovery-server-ntrrl
           imagePullPolicy: IfNotPresent
-          resources: { }
 
 
-status: { }
+
