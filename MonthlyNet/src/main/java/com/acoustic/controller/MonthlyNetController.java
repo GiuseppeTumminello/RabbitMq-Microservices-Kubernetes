@@ -32,7 +32,7 @@ public class MonthlyNetController {
     private final SalaryCalculatorService salaryCalculatorService;
     private final ObjectMapper objectMapper;
 
-    private static final String MONTHLY_NET_QUEUE = "monthly-net-queue";
+    private static final String MONTHLY_NET_QUEUE = "monthly-net-q";
 
 
     @SqsListener(MONTHLY_NET_QUEUE)

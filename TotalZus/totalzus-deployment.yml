@@ -18,7 +18,7 @@ spec:
         app: totalzus
     spec:
       containers:
-      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/total-zus-reposi:latest
+      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/total-zus-salary-repo:latest
         name: rabbitmq-microservices-kubernates-total-zus-g8b6v
         imagePullPolicy: IfNotPresent
         env:

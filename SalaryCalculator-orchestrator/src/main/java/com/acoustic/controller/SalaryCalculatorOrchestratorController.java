@@ -1,15 +1,12 @@
 package com.acoustic.controller;
 
 
-import com.acoustic.entity.MicroservicesData;
 import com.acoustic.entity.SalaryCalculatorOrchestratorData;
 import com.acoustic.jobcategories.JobCategoriesConfigurationProperties;
-import com.acoustic.repository.MicroservicesDataDao;
 import com.acoustic.repository.SalaryCalculatorOrchestratorDao;
 import com.acoustic.service.CollectResponsesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -36,15 +33,9 @@ public class SalaryCalculatorOrchestratorController {
     private final JobCategoriesConfigurationProperties jobCategoriesConfigurationProperties;
     private final SalaryCalculatorOrchestratorDao salaryCalculatorOrchestratorDao;
 
-    private final MicroservicesDataDao microservicesDataDao;
-
     private final CollectResponsesService collectResponsesService;
 
-   @SqsListener("salary-calculator-queue")
-    public void messageReceiver(MicroservicesData microservicesData) {
-       log.info(microservicesData.toString());
-       this.microservicesDataDao.save(microservicesData);
-    }
+
 
 
     @GetMapping("/jobs/{departmentName}")

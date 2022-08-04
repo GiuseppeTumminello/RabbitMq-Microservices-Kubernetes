@@ -23,7 +23,6 @@ public class DynamoDbConfiguration {
     }
 
     public AmazonDynamoDB amazonDynamoDbConfig() {
-        return AmazonDynamoDBClientBuilder.standard().withCredentials(new ProfileCredentialsProvider(this.awsSettings.getProfileName())).withRegion(Regions.US_EAST_1).build();
-        //return AmazonDynamoDBClientBuilder.defualtClient();
+        return AmazonDynamoDBClientBuilder.standard().withRegion(Regions.US_EAST_1).withCredentials(new ProfileCredentialsProvider(this.awsSettings.getProfileName())).build();
     }
 }

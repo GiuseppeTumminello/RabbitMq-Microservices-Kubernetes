@@ -24,11 +24,8 @@ spec:
         resources: {}
         env:
           - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-            value: http://discovery-server:8761/eureka
-          - name: SPRING_DATASOURCE_URL
-            value: jdbc:postgresql://postgres:5432/
-          - name: SPRING_DATASOURCE_USERNAME
-            value: postgres
-          - name: SPRING_DATASOURCE_PASSWORD
-            value: password
+            valueFrom:
+              configMapKeyRef:
+                name: eureka-config
+                key: eureka-client
 status: {}

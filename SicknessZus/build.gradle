@@ -3,9 +3,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'com.amazonaws:aws-java-sdk-dynamodb:1.12.268'
-    implementation 'com.github.derjust:spring-data-dynamodb:5.1.0'
     implementation 'org.springframework.cloud:spring-cloud-aws-messaging:2.2.6.RELEASE'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 }
 
 test {

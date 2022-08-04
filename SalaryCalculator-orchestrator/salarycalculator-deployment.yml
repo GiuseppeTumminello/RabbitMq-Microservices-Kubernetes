@@ -18,17 +18,13 @@ spec:
         app: salarycalculator
     spec:
       containers:
-      - image: rabbitmq-microservices-kubernates_salary-calculator
+      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/salary-calculator-repository:latest
         name: rabbitmq-microservices-kubernates-salary-calculator-j7zct
         imagePullPolicy: IfNotPresent
-        resources: {}
         env:
           - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-            value: http://discovery-server:8761/eureka
-          - name: SPRING_DATASOURCE_URL
-            value: jdbc:postgresql://postgres:5432/
-          - name: SPRING_DATASOURCE_USERNAME
-            value: postgres
-          - name: SPRING_DATASOURCE_PASSWORD
-            value: password
-status: {}
+            valueFrom:
+              configMapKeyRef:
+                name: eureka-config
+                key: eureka-client
+

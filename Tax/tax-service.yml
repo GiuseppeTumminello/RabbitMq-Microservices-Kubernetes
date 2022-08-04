@@ -11,9 +11,8 @@ spec:
     port: 8090
     protocol: TCP
     targetPort: 8090
-      nodePort: 30541
   selector:
     app: tax
-  type: NodePort
+  type: LoadBalancer
 status:
   loadBalancer: {}
