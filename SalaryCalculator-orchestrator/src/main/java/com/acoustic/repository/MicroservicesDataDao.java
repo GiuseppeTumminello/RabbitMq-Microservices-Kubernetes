@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface MicroservicesDataDao {
 
-     MicroservicesData save(MicroservicesData microservicesData);
+     void save(MicroservicesData microservicesData);
      List<MicroservicesData> findByUuid(String description);
 }

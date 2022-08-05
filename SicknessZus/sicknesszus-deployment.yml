@@ -10,7 +10,6 @@ spec:
   selector:
     matchLabels:
       app: sicknesszus
-  strategy: {}
   template:
     metadata:
       creationTimestamp: null
@@ -18,7 +17,7 @@ spec:
         app: sicknesszus
     spec:
       containers:
-      - image: rabbitmq-microservices-kubernates_sickness-zus
+      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/sickness-zus-repo:latest
         name: rabbitmq-microservices-kubernates-sickness-zus-rbght
         imagePullPolicy: IfNotPresent
         env:

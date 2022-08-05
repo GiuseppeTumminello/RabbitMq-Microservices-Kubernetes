@@ -15,4 +15,4 @@ spec:
     app: totalzus
   type: LoadBalancer
 status:
-  loadBalancer: {}
+

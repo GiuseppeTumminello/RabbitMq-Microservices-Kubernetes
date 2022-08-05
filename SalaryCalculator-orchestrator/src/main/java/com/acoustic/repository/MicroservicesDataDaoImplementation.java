@@ -22,9 +22,8 @@ public class MicroservicesDataDaoImplementation implements MicroservicesDataDao 
 
 
     @Override
-    public MicroservicesData save(MicroservicesData Microservices) {
+    public void save(MicroservicesData Microservices) {
         this.dynamoDBMapper.save(Microservices);
-        return Microservices;
 
     }
 
@@ -35,7 +34,7 @@ public class MicroservicesDataDaoImplementation implements MicroservicesDataDao 
         scanExpression.addFilterCondition(UUID_COLUMN_NAME, new Condition()
                 .withComparisonOperator(ComparisonOperator.EQ)
                 .withAttributeValueList(new AttributeValue().withS(uuid)));
-        return dynamoDBMapper.scan(MicroservicesData.class, scanExpression);
+        return this.dynamoDBMapper.scan(MicroservicesData.class, scanExpression);
 
     }
 

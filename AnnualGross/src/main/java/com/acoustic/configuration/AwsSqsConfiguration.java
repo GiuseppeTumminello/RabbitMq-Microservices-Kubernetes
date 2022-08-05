@@ -24,7 +24,7 @@ public class AwsSqsConfiguration {
         return new QueueMessagingTemplate(awsSqsAsync());
     }
 
-    private AmazonSQSAsync awsSqsAsync() {
+    public AmazonSQSAsync awsSqsAsync() {
         return AmazonSQSAsyncClientBuilder.standard().withRegion(Regions.US_EAST_1).withCredentials(new ProfileCredentialsProvider(this.awsSettings.getProfileName())).build();
     }
 

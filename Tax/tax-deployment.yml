@@ -10,7 +10,6 @@ spec:
   selector:
     matchLabels:
       app: tax
-  strategy: {}
   template:
     metadata:
       creationTimestamp: null
@@ -18,7 +17,7 @@ spec:
         app: tax
     spec:
       containers:
-      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/repo-tax:latest
+      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/tax-repo:latest
         name: rabbitmq-microservices-kubernates-tax-4jwrs
         imagePullPolicy: IfNotPresent
         env:

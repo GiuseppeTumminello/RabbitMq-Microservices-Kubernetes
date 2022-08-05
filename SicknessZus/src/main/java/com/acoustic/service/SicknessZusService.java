@@ -15,7 +15,6 @@ import java.math.RoundingMode;
 public class SicknessZusService implements SalaryCalculatorService{
 
     private final RatesConfigurationProperties ratesConfigurationProperties;
-
     private final AwsSettings awsSettings;
     private final QueueMessagingTemplate queueMessagingTemplate;
 

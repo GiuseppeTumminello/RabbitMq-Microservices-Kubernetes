@@ -18,7 +18,7 @@ spec:
         app: salarycalculator
     spec:
       containers:
-      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/salary-calculator-repository:latest
+      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/salary-calculator-orchestrator-repo:latest
         name: rabbitmq-microservices-kubernates-salary-calculator-j7zct
         imagePullPolicy: IfNotPresent
         env:

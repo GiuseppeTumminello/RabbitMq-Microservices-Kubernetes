@@ -1,8 +1,6 @@
 package com.acoustic.configuartion;
 
-import com.acoustic.awssettings.AwsSettings;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
-import com.amazonaws.regions.Regions;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +12,13 @@ import org.springframework.context.annotation.Primary;
 @RequiredArgsConstructor
 public class AwsSnsConfiguration {
 
-    private final AwsSettings awsSettings;
+
     @Primary
     @Bean
     public AmazonSNSClient amazonSNSClient (){
-        return (AmazonSNSClient) AmazonSNSClientBuilder.standard().withRegion(Regions.US_EAST_1).withCredentials(new ProfileCredentialsProvider(this.awsSettings.getProfileName())).build();
+        return (AmazonSNSClient) AmazonSNSClientBuilder.standard()
+                .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
+                .build();
     }
 
 

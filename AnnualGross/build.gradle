@@ -6,6 +6,10 @@ dependencies {
     implementation 'com.github.derjust:spring-data-dynamodb:5.1.0'
     implementation 'org.springframework.cloud:spring-cloud-aws-messaging:2.2.6.RELEASE'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    testImplementation 'org.testcontainers:localstack:1.17.3'
+    testImplementation 'com.jayway.awaitility:awaitility:1.7.0'
+    testImplementation('org.testcontainers:testcontainers:1.17.3')
+    testImplementation('org.testcontainers:junit-jupiter:1.17.3')
 
 }
 

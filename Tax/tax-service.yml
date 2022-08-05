@@ -15,4 +15,4 @@ spec:
     app: tax
   type: LoadBalancer
 status:
-  loadBalancer: {}
+

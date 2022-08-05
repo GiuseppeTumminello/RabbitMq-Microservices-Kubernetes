@@ -29,7 +29,6 @@ import java.util.UUID;
 @Slf4j
 public class TotalZusController {
 
-
     public static final int MINIMUM_GROSS = 2000;
     private final TotalZusDao totalZusDao;
     private final SalaryCalculatorService salaryCalculatorService;

@@ -10,7 +10,6 @@ spec:
   selector:
     matchLabels:
       app: totalzus
-  strategy: {}
   template:
     metadata:
       creationTimestamp: null
@@ -18,7 +17,7 @@ spec:
         app: totalzus
     spec:
       containers:
-      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/total-zus-salary-repo:latest
+      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/total-zus-repo:latest
         name: rabbitmq-microservices-kubernates-total-zus-g8b6v
         imagePullPolicy: IfNotPresent
         env:

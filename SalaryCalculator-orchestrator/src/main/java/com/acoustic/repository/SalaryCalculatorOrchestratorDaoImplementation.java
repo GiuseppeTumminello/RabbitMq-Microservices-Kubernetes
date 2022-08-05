@@ -10,9 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,12 +41,7 @@ public class SalaryCalculatorOrchestratorDaoImplementation implements SalaryCalc
 
     public BigDecimal findAverageByJobTitle(String jobTitle){
         var monthlyGrossSalary = findGrossSalaryByJobTitle(jobTitle).stream().map(SalaryCalculatorOrchestratorData::getGrossMonthlySalary).collect(Collectors.toList());
-        BigDecimal[] totalWithCount
-                = monthlyGrossSalary.stream()
-                .filter(Objects::nonNull)
-                .map(bd -> new BigDecimal[]{bd, BigDecimal.ONE})
-                .reduce((a, b) -> new BigDecimal[]{a[0].add(b[0]), a[1].add(BigDecimal.ONE)}).orElse(null);
-        return Objects.requireNonNull(totalWithCount)[0].divide(totalWithCount[1], RoundingMode.HALF_EVEN);
+        return BigDecimal.valueOf(monthlyGrossSalary.stream().mapToDouble(BigDecimal::doubleValue).average().orElse(Double.NaN));
 
     }
 
