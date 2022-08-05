@@ -10,7 +10,6 @@ spec:
   selector:
     matchLabels:
       app: annualnet
-  strategy: {}
   template:
     metadata:
       creationTimestamp: null
@@ -18,7 +17,7 @@ spec:
         app: annualnet
     spec:
       containers:
-      - image: rabbitmq-microservices-kubernates_annual-net
+      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/annual-net-repo:latest
         name: rabbitmq-microservices-kubernates-annual-net-v8vjg
         imagePullPolicy: IfNotPresent
         env:

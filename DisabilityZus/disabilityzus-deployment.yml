@@ -10,7 +10,6 @@ spec:
   selector:
     matchLabels:
       app: disabilityzus
-  strategy: {}
   template:
     metadata:
       creationTimestamp: null
@@ -18,7 +17,7 @@ spec:
         app: disabilityzus
     spec:
       containers:
-      - image: rabbitmq-microservices-kubernates_disability-zus
+      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/disability-zus-repo:latest
         name: rabbitmq-microservices-kubernates-disability-zus-m4c6f
         imagePullPolicy: IfNotPresent
         env:

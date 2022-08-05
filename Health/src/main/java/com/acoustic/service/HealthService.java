@@ -15,12 +15,8 @@ import java.math.RoundingMode;
 public class HealthService implements SalaryCalculatorService {
 
     private final RatesConfigurationProperties ratesConfigurationProperties;
-
-
     private final QueueMessagingTemplate queueMessagingTemplate;
-
     private final AwsSettings awsSettings;
-
     @Override
     public String getDescription() {
         return "Health";

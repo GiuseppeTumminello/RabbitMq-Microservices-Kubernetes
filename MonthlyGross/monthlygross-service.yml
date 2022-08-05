@@ -11,9 +11,8 @@ spec:
     port: 8094
     protocol: TCP
     targetPort: 8094
-    nodePort: 30534
   selector:
     app: monthlygross
-  type: NodePort
+  type: LoadBalancer
 status:
-  loadBalancer: {}
+

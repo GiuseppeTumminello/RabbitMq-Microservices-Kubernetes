@@ -10,7 +10,6 @@ spec:
   selector:
     matchLabels:
       app: monthlygross
-  strategy: {}
   template:
     metadata:
       creationTimestamp: null
@@ -18,7 +17,7 @@ spec:
         app: monthlygross
     spec:
       containers:
-      - image: rabbitmq-microservices-kubernates_monthly-gross
+      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/monthly-gross-repo:latest
         name: rabbitmq-microservices-kubernates-monthly-gross-r9r8k
         imagePullPolicy: IfNotPresent
         env:

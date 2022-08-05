@@ -37,7 +37,7 @@ public class MonthlyNetService implements SalaryCalculatorService {
 
     @Override
     public void sendMonthlyNet(MonthlyNet monthlyNet) {
-        this.queueMessagingTemplate.convertAndSend("https://sqs.us-east-1.amazonaws.com/342003767516/salary-calculator-queue", monthlyNet);
+        this.queueMessagingTemplate.convertAndSend(this.awsSettings.getSqsEndpoint(), monthlyNet);
     }
 
     private BigDecimal calculateTotalZus(BigDecimal grossMonthlySalary) {

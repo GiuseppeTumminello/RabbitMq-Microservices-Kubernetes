@@ -10,7 +10,6 @@ spec:
   selector:
     matchLabels:
       app: annualgross
-  strategy: {}
   template:
     metadata:
       creationTimestamp: null
@@ -18,7 +17,7 @@ spec:
         app: annualgross
     spec:
       containers:
-      - image: rabbitmq-microservices-kubernates_annual-gross
+      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/annual-gross-repo:latest
         name: rabbitmq-microservices-kubernates-annual-gross-7pbtg
         imagePullPolicy: IfNotPresent
         env:

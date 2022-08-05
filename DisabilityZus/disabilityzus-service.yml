@@ -11,9 +11,8 @@ spec:
     port: 8084
     protocol: TCP
     targetPort: 8084
-    nodePort: 30532
   selector:
     app: disabilityzus
-  type: NodePort
+  type: LoadBalancer
 status:
   loadBalancer: {}

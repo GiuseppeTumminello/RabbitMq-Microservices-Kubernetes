@@ -10,7 +10,6 @@ spec:
   selector:
     matchLabels:
       app: pensionzus
-  strategy: {}
   template:
     metadata:
       creationTimestamp: null
@@ -18,7 +17,7 @@ spec:
         app: pensionzus
     spec:
       containers:
-      - image: rabbitmq-microservices-kubernates_pension-zus
+      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/pension-zus-repo:latest
         name: rabbitmq-microservices-kubernates-pension-zus-n4wvz
         imagePullPolicy: IfNotPresent
         env:

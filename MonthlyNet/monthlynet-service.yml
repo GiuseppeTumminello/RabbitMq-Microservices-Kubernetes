@@ -11,9 +11,8 @@ spec:
     port: 8092
     protocol: TCP
     targetPort: 8092
-    nodePort: 30537
   selector:
     app: monthlynet
-  type: NodePort
+  type: LoadBalancer
 status:
-  loadBalancer: {}
+

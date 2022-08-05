@@ -3,22 +3,21 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: monthlygross
-  name: monthlygross
+    app: monthlynet
+  name: monthlynet
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: monthlygross
-  strategy: {}
+      app: monthlynet
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: monthlygross
+        app: monthlynet
     spec:
       containers:
-      - image: rabbitmq-microservices-kubernates_monthly-net
+      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/monthly-net-repo:latest
         name: rabbitmq-microservices-kubernates-monthly-net-vckwz
         imagePullPolicy: IfNotPresent
         env:

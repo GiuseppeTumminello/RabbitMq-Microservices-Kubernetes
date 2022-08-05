@@ -31,7 +31,6 @@ public class MonthlyNetController {
     private final MonthlyNetDao monthlyNetDao;
     private final SalaryCalculatorService salaryCalculatorService;
     private final ObjectMapper objectMapper;
-
     private static final String MONTHLY_NET_QUEUE = "monthly-net-q";
 
 

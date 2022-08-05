@@ -11,9 +11,8 @@ spec:
     port: 8093
     protocol: TCP
     targetPort: 8093
-    nodePort: 30531
   selector:
     app: annualnet
-  type: NodePort
+  type: LoadBalancer
 status:
-  loadBalancer: {}
+

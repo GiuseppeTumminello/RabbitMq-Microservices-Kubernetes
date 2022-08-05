@@ -11,9 +11,8 @@ spec:
     port: 8081
     protocol: TCP
     targetPort: 8081
-    nodePort: 30539
   selector:
     app: pensionzus
-  type: NodePort
+  type: LoadBalancer
 status:
-  loadBalancer: {}
+

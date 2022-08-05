@@ -10,7 +10,6 @@ spec:
   selector:
     matchLabels:
       app: health
-  strategy: {}
   template:
     metadata:
       creationTimestamp: null
@@ -18,14 +17,13 @@ spec:
         app: health
     spec:
       containers:
-      - image: rabbitmq-microservices-kubernates_health
+      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/health-repo:latest
         name: rabbitmq-microservices-kubernates-health-tfk68
         imagePullPolicy: IfNotPresent
-        resources: {}
         env:
           - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
             valueFrom:
               configMapKeyRef:
                 name: eureka-config
                 key: eureka-client
-status: {}
+

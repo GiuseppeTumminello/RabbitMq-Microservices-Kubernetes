@@ -11,9 +11,8 @@ spec:
     port: 8088
     protocol: TCP
     targetPort: 8088
-    nodePort: 30533
   selector:
     app: health
-  type: NodePort
+  type: LoadBalancer
 status:
   loadBalancer: {}
