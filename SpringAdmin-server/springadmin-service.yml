@@ -7,13 +7,12 @@ metadata:
   name: springadmin
 spec:
   ports:
-  - name: 8096-8096
-    port: 8096
+  - name: 8099-8099
+    port: 8099
     protocol: TCP
-    targetPort: 8096
-    nodePort: 30541
+    targetPort: 8099
   selector:
     app: springadmin
-  type: NodePort
+  type: LoadBalancer
 status:
-  loadBalancer: {}
+

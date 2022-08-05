@@ -10,7 +10,6 @@ spec:
   selector:
     matchLabels:
       app: springadmin
-  strategy: {}
   template:
     metadata:
       creationTimestamp: null
@@ -18,13 +17,17 @@ spec:
         app: springadmin
     spec:
       containers:
-      - image: rabbitmq-microservices-kubernates_spring-admin
+      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/adm-spring:latest
         name: rabbitmq-microservices-kubernates-spring-admin-69z26
         imagePullPolicy: IfNotPresent
-        resources: {}
         env:
-          - name: SPRING.BOOT.ADMIN.UI.PUBLIC-URL
-            value: http://${HOST_IP}:8080/monitoring/microservices/
           - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-            value: http://discovery-server:8761/eureka
-status: {}
+            valueFrom:
+              configMapKeyRef:
+                name: eureka-config
+                key: eureka-client
+          - name: SPRING.BOOT.ADMIN.UI.PUBLIC-URL
+            valueFrom:
+              configMapKeyRef:
+                name: eureka-config
+                key: spring-admin

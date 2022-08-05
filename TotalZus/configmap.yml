@@ -4,3 +4,5 @@ metadata:
   name : eureka-config
 data:
   eureka-client: http://discovery-server:8761/eureka
+  spring-admin: http://10.0.1.224:8080/monitoring/microservices/
+

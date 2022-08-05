@@ -17,7 +17,7 @@ spec:
         app: apigateway
     spec:
       containers:
-      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/api-gateway-repo:latest
+      - image: 342003767516.dkr.ecr.us-east-1.amazonaws.com/api-repo:latest
         name: rabbitmq-microservices-kubernates-api-gateway-6djk9
         imagePullPolicy: IfNotPresent
         env:
